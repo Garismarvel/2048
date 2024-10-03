@@ -190,6 +190,7 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
 
     this.inputManager.on("move", this.move.bind(this));
     this.inputManager.on("restart", this.restart.bind(this));
+    this.inputManager.on("undo", this.undo.bind(this));
     this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));
 
     this.setup();
@@ -197,9 +198,19 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
 
 // Restart the game
 GameManager.prototype.restart = function () {
+    this.storageManager.clearLastMoves();
     this.storageManager.clearGameState();
     this.actuator.continueGame(); // Clear the game won/lost message
     this.setup();
+};
+
+GameManager.prototype.undo = function () {
+  var data = this.storageManager.getLastMove(true);
+  if (data !== null) {
+    this.storageManager.setGameState(data);
+    this.actuator.continueGame();
+    this.setup();
+  }
 };
 
 // Keep playing after winning (allows going over 2048)
@@ -275,6 +286,13 @@ GameManager.prototype.actuate = function () {
     } else {
         this.storageManager.setGameState(this.serialize());
     }
+  
+    var data = this.storageManager.getLastMove(false);
+    if (data !== null) {
+        document.getElementsByClassName("undo-button")[0].classList.remove("disabled");
+    } else {
+        document.getElementsByClassName("undo-button")[0].classList.add("disabled");
+    }
 
     this.actuator.actuate(this.grid, {
         score: this.score,
@@ -326,6 +344,8 @@ GameManager.prototype.move = function (direction) {
     var vector = this.getVector(direction);
     var traversals = this.buildTraversals(vector);
     var moved = false;
+  
+    var dat = this.serialize();
 
     // Save the current tile positions and remove merger information
     this.prepareTiles();
@@ -371,9 +391,8 @@ GameManager.prototype.move = function (direction) {
     });
 
     if (moved) {
-        this.addRandomTile();
-        this.addRandomTile();
-        this.addRandomTile();
+        this.storageManager.setLastMove(dat);
+        
         this.addRandomTile();
 
         if (!this.movesAvailable()) {
@@ -854,12 +873,18 @@ KeyboardInputManager.prototype.listen = function () {
         if (!modifiers && event.which === 82) {
             self.restart.call(self, event);
         }
+
+        // Changes www.nitinpathak.esy.es U key undo the game
+        else if (!modifiers && event.which === 85) {
+            self.undo.call(self, event);
+        }
     });
 
     // Respond to button presses
     this.bindButtonPress(".retry-button", this.restart);
     this.bindButtonPress(".restart-button", this.restart);
     this.bindButtonPress(".keep-playing-button", this.keepPlaying);
+    this.bindButtonPress(".undo-button", this.undo);
 
     // Respond to swipe events
     var touchStartClientX, touchStartClientY;
@@ -921,6 +946,11 @@ KeyboardInputManager.prototype.restart = function (event) {
 KeyboardInputManager.prototype.keepPlaying = function (event) {
     event.preventDefault();
     this.emit("keepPlaying");
+};
+
+KeyboardInputManager.prototype.undo = function (event) {
+  event.preventDefault();
+  this.emit("undo");
 };
 
 KeyboardInputManager.prototype.bindButtonPress = function (selector, fn) {
@@ -994,6 +1024,37 @@ LocalStorageManager.prototype.setGameState = function (gameState) {
 
 LocalStorageManager.prototype.clearGameState = function () {
     this.storage.removeItem(this.gameStateKey);
+};
+
+LocalStorageManager.prototype.getLastMove = function (willUse) {
+  var i=this.getTotalMoves();
+  var stateJSON = this.storage.getItem(this.lastMoveKey+i.toString());
+  if (willUse && JSON.parse(stateJSON)) {
+    this.storage.removeItem(this.lastMoveKey+i.toString());
+    this.setTotalMoves(--i);
+  }
+  return stateJSON ? JSON.parse(stateJSON) : null;
+};
+
+LocalStorageManager.prototype.setLastMove = function (lastMove) {
+  var i=this.getTotalMoves();
+  this.storage.setItem(this.lastMoveKey+(++i).toString(), JSON.stringify(lastMove));
+  this.setTotalMoves(i);
+};
+
+LocalStorageManager.prototype.clearLastMoves = function () {
+  for (var i=this.getTotalMoves(); i > 0; i--) {
+    this.storage.removeItem(this.lastMoveKey+i.toString());
+  };
+  this.storage.removeItem(this.totalMovesKey);
+};
+
+LocalStorageManager.prototype.getTotalMoves = function () {
+  return this.storage.getItem(this.totalMovesKey) || 0;
+};
+
+LocalStorageManager.prototype.setTotalMoves = function (moves) {
+  this.storage.setItem(this.totalMovesKey, moves);
 };
 
 function Tile(position, value) {
