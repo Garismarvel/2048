@@ -40,7 +40,7 @@ function doMovementPattern(moveType) {
   if (typeof(mover) != 'undefined') {
     clearInterval(mover);
   }
-  mover = setInterval(moveType, 0);
+  mover = setInterval(moveType, 50);
 }
 
 function stopMovement() {
