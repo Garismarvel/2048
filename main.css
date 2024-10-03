@@ -1514,6 +1514,28 @@ hr {
     text-align: center;
     float: right;
 }
+.restart-button {
+    display: inline-block;
+    background: #8f7a66;
+    border-radius: 3px;
+    padding: 0 20px;
+    text-decoration: none;
+    color: #f9f6f2;
+    height: 40px;
+    line-height: 42px;
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    float: right;
+}
+
+.undo-button {
+    margin-right: 4.5px;
+}
+
+.disabled {
+    background: #bbada0;
+}
 .game-explanation {
     margin-top: 50px;
 }
@@ -1556,8 +1578,6 @@ hr {
         line-height: 1.65;
     }
     .restart-button {
-        width: 42%;
-        padding: 0;
         display: block;
         box-sizing: border-box;
         margin-top: 2px;
