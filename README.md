@@ -1,7 +1,7 @@
-- [3x3](https://garismarvel.github.io/2048/3x3.html)
-- [4x4](https://garismarvel.github.io/2048/4x4.html)
-- [5x5](https://garismarvel.github.io/2048/5x5.html)
-- [6x6](https://garismarvel.github.io/2048/6x6.html)
-- [7x7](https://garismarvel.github.io/2048/7x7.html)
-- [8x8](https://garismarvel.github.io/2048/8x8.html)
-- [16x16](https://garismarvel.github.io/2048/16x16.html)
+- [3x3](https://garismarvel.github.io/2048/3x3.html) - 256 tile
+- [4x4](https://garismarvel.github.io/2048/4x4.html) - 2048 tile
+- [5x5](https://garismarvel.github.io/2048/5x5.html) - 8192 tile
+- [6x6](https://garismarvel.github.io/2048/6x6.html) - 32768 tile
+- [7x7](https://garismarvel.github.io/2048/7x7.html) - 131072 tile
+- [8x8](https://garismarvel.github.io/2048/8x8.html) - 4194304 tile
+- [16x16](https://garismarvel.github.io/2048/16x16.html) - 268435456 tile
