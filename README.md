@@ -2,6 +2,6 @@
 - [4x4](https://garismarvel.github.io/2048/4x4.html) - 2048 tile
 - [5x5](https://garismarvel.github.io/2048/5x5.html) - 8192 tile
 - [6x6](https://garismarvel.github.io/2048/6x6.html) - 32768 tile
-- [7x7](https://garismarvel.github.io/2048/7x7.html) - 131072 tile
+- [7x7](https://garismarvel.github.io/2048/7x7.html) - 262144 tile
 - [8x8](https://garismarvel.github.io/2048/8x8.html) - 4194304 tile
 - [16x16](https://garismarvel.github.io/2048/16x16.html) - 268435456 tile
