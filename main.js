@@ -40,7 +40,7 @@ function doMovementPattern(moveType) {
   if (typeof(mover) != 'undefined') {
     clearInterval(mover);
   }
-  mover = setInterval(moveType, 50);
+  mover = setInterval(moveType, 0);
 }
 
 function stopMovement() {
@@ -943,7 +943,9 @@ KeyboardInputManager.prototype.listen = function () {
 
 KeyboardInputManager.prototype.restart = function (event) {
     event.preventDefault();
-    this.emit("restart");
+    if (confirm('Are you sure you want to reload this game?')) {
+        this.emit("restart");
+    }
 };
 
 KeyboardInputManager.prototype.keepPlaying = function (event) {
